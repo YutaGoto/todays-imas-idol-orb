@@ -5,6 +5,7 @@ orbs:
 jobs:
   build:
     docker:
+    - image: bash
     - image: circleci/ruby:2.5.3-node-browsers
     steps:
       - todays-imas-idol-command/echo-todays-imas-idol
