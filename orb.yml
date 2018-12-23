@@ -6,6 +6,8 @@ commands:
     description: アイドルを出力
     steps:
       - run:
+          command: apk update && apk add curl curl-dev bash jq
+      - run:
           name: 今日
           command: TODAY=`date +%m-%d`
       - run:
