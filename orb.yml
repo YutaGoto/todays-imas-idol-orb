@@ -7,7 +7,7 @@ commands:
     steps:
       - checkout
       - run:
-          command: apt-get update && apt-get install curl jq
+          command: apt-get update && apt-get install -y curl jq
       - run:
           name: 今日のアイドル
           command: |
