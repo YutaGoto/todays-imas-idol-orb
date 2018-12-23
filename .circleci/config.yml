@@ -1,0 +1,15 @@
+version: 2.1
+orbs:
+  todays-imas-idol-command: yutagoto/todays-imas-idol@dev:first
+
+jobs:
+  build:
+    docker:
+    - image: bash
+    steps:
+      - todays-imas-idol-command/echo-todays-imas-idol
+
+workflows:
+  main:
+    jobs:
+    - build
