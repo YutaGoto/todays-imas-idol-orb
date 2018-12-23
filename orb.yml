@@ -6,7 +6,7 @@ commands:
     description: アイドルを出力
     steps:
       - run:
-          command: apt-get update && apt-get install curl curl-dev bash jq
+          command: sudo apt-get update && sudo apt-get install curl curl-dev bash jq
       - run:
           name: 今日のアイドル
           command: |
