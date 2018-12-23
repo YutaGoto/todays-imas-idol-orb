@@ -5,8 +5,9 @@ commands:
   echo-todays-imas-idol:
     description: アイドルを出力
     steps:
+      - checkout
       - run:
-          command: sudo apt-get update && sudo apt-get install curl jq
+          command: apt-get update && apt-get install curl jq
       - run:
           name: 今日のアイドル
           command: |
