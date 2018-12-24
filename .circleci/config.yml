@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  todays-imas-idol-command: yutagoto/todays-imas-idol@dev:first
+  todays-imas-idol: yutagoto/todays-imas-idol@0.1.0
 
 jobs:
   build:
@@ -11,9 +11,19 @@ jobs:
           command: |
             apt-get update
             apt-get install -y sudo
-      - todays-imas-idol-command/echo-todays-imas-idol
+      - todays-imas-idol/echo-todays-imas-idol
 
 workflows:
   main:
+    jobs:
+    - build
+
+  smoke_test:
+    triggers:
+      - schedule:
+          cron: "0 0,12 * * *"
+          filters:
+            branches:
+              only: master
     jobs:
     - build

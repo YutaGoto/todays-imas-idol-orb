@@ -1,5 +1,32 @@
 version: 2.1
-description: 本日誕生日のアイドルを出力します
+description: >
+  このOrbは本日誕生日のアイドルをCircleCI上に出力します。
+  このOrbはim@sparqlをしようしています。 https://sparql.crssnky.xyz/imas/
+  このOrbのリポジトリは https://github.com/YutaGoto/todays-imas-idol-orb です。
+
+examples:
+  echo-idols:
+    usage:
+      version: 2.1
+      orbs:
+        todays-imas-idol: yutagoto/todays-imas-idol@0.1.0
+
+      jobs:
+        build:
+          docker:
+          - image: ubuntu:18.04
+          steps:
+            - run:
+                command: |
+                  apt-get update
+                  apt-get install -y sudo
+            - todays-imas-idol/echo-todays-imas-idol
+
+      workflows:
+        main:
+          jobs:
+          - build
+
 
 commands:
   echo-todays-imas-idol:
