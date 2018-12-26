@@ -21,7 +21,7 @@ workflows:
   smoke_test:
     triggers:
       - schedule:
-          cron: "0 0,12 * * *"
+          cron: "0 12 * * *"
           filters:
             branches:
               only: master
