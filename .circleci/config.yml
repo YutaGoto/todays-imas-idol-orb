@@ -26,6 +26,7 @@ workflows:
   main:
     jobs:
     - build
+    - slack
 
   smoke_test:
     triggers:
