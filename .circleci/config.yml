@@ -15,6 +15,9 @@ jobs:
   slack:
     docker:
     - image: ubuntu:18.04
+    parameters:
+      slack_username: CiecleCI
+      slack_icon: ":ciecleci:"
     steps:
       - run:
           command: |
