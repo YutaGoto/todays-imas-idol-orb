@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  todays-imas-idol: yutagoto/todays-imas-idol@0.1.0
+  todays-imas-idol: yutagoto/todays-imas-idol@dev:first
 
 jobs:
   build:
@@ -12,6 +12,15 @@ jobs:
             apt-get update
             apt-get install -y sudo
       - todays-imas-idol/echo-todays-imas-idol
+  slack:
+    docker:
+    - image: ubuntu:18.04
+    steps:
+      - run:
+          command: |
+            apt-get update
+            apt-get install -y sudo
+      - todays-imas-idol/slack-notification-todays-imas-idol
 
 workflows:
   main:
@@ -22,6 +31,16 @@ workflows:
     triggers:
       - schedule:
           cron: "0 12 * * *"
+          filters:
+            branches:
+              only: master
+    jobs:
+    - build
+
+  smoke_test_slack:
+    triggers:
+      - schedule:
+          cron: "0 0 * * *"
           filters:
             branches:
               only: master
