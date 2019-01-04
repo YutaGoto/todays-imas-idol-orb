@@ -15,15 +15,14 @@ jobs:
   slack:
     docker:
     - image: ubuntu:18.04
-    parameters:
-      slack_username: CiecleCI
-      slack_icon: ":ciecleci:"
     steps:
       - run:
           command: |
             apt-get update
             apt-get install -y sudo
-      - todays-imas-idol/slack-notification-todays-imas-idol
+      - todays-imas-idol/slack-notification-todays-imas-idol:
+          slack_username: CiecleCI
+          slack_icon: ":ciecleci:"
 
 workflows:
   main:
