@@ -10,7 +10,6 @@ examples:
       version: 2.1
       orbs:
         todays-imas-idol: yutagoto/todays-imas-idol@0.2.0
-
       jobs:
         build:
           docker:
@@ -21,7 +20,6 @@ examples:
                   apt-get update
                   apt-get install -y sudo
             - todays-imas-idol/echo-todays-imas-idol
-
       workflows:
         main:
           jobs:
@@ -32,7 +30,6 @@ examples:
       version: 2.1
       orbs:
         todays-imas-idol: yutagoto/todays-imas-idol@0.2.0
-
       jobs:
         build:
           docker:
@@ -44,6 +41,10 @@ examples:
                   apt-get install -y sudo
             - todays-imas-idol/slack-notification-todays-imas-idol:
                 slack_username: 今日のアイドル
+      workflows:
+        main:
+          jobs:
+          - build
 
 commands:
   echo-todays-imas-idol:
