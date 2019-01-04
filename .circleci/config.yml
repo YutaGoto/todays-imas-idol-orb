@@ -12,6 +12,7 @@ jobs:
             apt-get update
             apt-get install -y sudo
       - todays-imas-idol/echo-todays-imas-idol
+
   slack:
     docker:
     - image: ubuntu:18.04

@@ -1,7 +1,7 @@
 version: 2.1
 description: >
   このOrbは本日誕生日のアイドルをCircleCI上に出力します。
-  このOrbはim@sparqlをしようしています。 https://sparql.crssnky.xyz/imas/
+  このOrbはim@sparqlを使用しています。 https://sparql.crssnky.xyz/imas/
   このOrbのリポジトリは https://github.com/YutaGoto/todays-imas-idol-orb です。
 
 examples:
@@ -9,7 +9,7 @@ examples:
     usage:
       version: 2.1
       orbs:
-        todays-imas-idol: yutagoto/todays-imas-idol@0.1.0
+        todays-imas-idol: yutagoto/todays-imas-idol@0.2.0
 
       jobs:
         build:
@@ -27,9 +27,27 @@ examples:
           jobs:
           - build
 
+  slack-notification-idols:
+    usage:
+      version: 2.1
+      orbs:
+        todays-imas-idol: yutagoto/todays-imas-idol@0.2.0
+
+      jobs:
+        build:
+          docker:
+          - image: ubuntu:18.04
+          steps:
+            - run:
+                command: |
+                  apt-get update
+                  apt-get install -y sudo
+            - todays-imas-idol/slack-notification-todays-imas-idol:
+                slack_username: 今日のアイドル
+
 commands:
   echo-todays-imas-idol:
-    description: アイドルを出力
+    description: 今日が誕生日のアイドルを出力
     steps:
       - checkout
       - run:
@@ -42,7 +60,7 @@ commands:
             curl -s $SPURL | jq ".results.bindings[].name.value"
 
   slack-notification-todays-imas-idol:
-    description: アイドルをSlackへ通知する
+    description: 今日が誕生日のアイドルをSlackへ通知する
     parameters:
       slack_webhook:
         default: ${SLACK_WEB_HOOK}
