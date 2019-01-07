@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  todays-imas-idol: yutagoto/todays-imas-idol@0.2.2
+  todays-imas-idol: yutagoto/todays-imas-idol@0.2.3
 
 jobs:
   build:
