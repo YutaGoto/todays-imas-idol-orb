@@ -1,0 +1,5 @@
+version: 2.1
+description: >
+  このOrbは本日誕生日のアイドルをCircleCI上に出力します。
+  このOrbはim@sparqlを使用しています。 https://sparql.crssnky.xyz/imas/
+  このOrbのリポジトリは https://github.com/YutaGoto/todays-imas-idol-orb です。

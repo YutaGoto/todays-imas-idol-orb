@@ -1,0 +1,19 @@
+description: 今日誕生日のアイドルをCircleCIの結果上に標準出力します。
+usage:
+  version: 2.1
+  orbs:
+    todays-imas-idol: yutagoto/todays-imas-idol@0.2.4
+  jobs:
+    build:
+      docker:
+      - image: ubuntu:18.04
+      steps:
+        - run:
+            command: |
+              apt-get update
+              apt-get install -y sudo
+        - todays-imas-idol/echo-todays-imas-idol
+  workflows:
+    main:
+      jobs:
+      - build

@@ -29,12 +29,20 @@ jobs:
       - todays-imas-idol/slack-notification-todays-imas-idol:
           slack_username: CiecleCI
           slack_icon: ":ciecleci:"
+  discord:
+    executor: ubuntu-docker
+    steps:
+      - run:
+          command: *install-sudo
+      - todays-imas-idol/discord-notification-todays-imas-idol:
+          discord_username: CiecleCI
 
 workflows:
   main:
     jobs:
     - build
     - slack
+    - discord
 
   smoke_test:
     triggers:
@@ -55,3 +63,13 @@ workflows:
               only: master
     jobs:
     - slack
+
+  smoke_test_slack:
+    triggers:
+      - schedule:
+          cron: "0 3 * * *"
+          filters:
+            branches:
+              only: master
+    jobs:
+    - discord
