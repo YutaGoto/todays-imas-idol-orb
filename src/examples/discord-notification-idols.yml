@@ -12,7 +12,7 @@ usage:
             command: |
               apt-get update
               apt-get install -y sudo
-        - todays-imas-idol/slack-notification-todays-imas-idol:
+        - todays-imas-idol/discord-notification-todays-imas-idol:
             discord_username: 今日のアイドル
   workflows:
     main:
