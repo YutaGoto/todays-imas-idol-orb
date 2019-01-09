@@ -6,10 +6,11 @@ description: >
 
 examples:
   echo-idols:
+    description: 今日誕生日のアイドルをCircleCIの結果上に標準出力します。
     usage:
       version: 2.1
       orbs:
-        todays-imas-idol: yutagoto/todays-imas-idol@0.2.4
+        todays-imas-idol: yutagoto/todays-imas-idol@0.3.0
       jobs:
         build:
           docker:
@@ -26,10 +27,11 @@ examples:
           - build
 
   slack-notification-idols:
+    description: 今日誕生日のアイドルをSlackに通知します
     usage:
       version: 2.1
       orbs:
-        todays-imas-idol: yutagoto/todays-imas-idol@0.2.4
+        todays-imas-idol: yutagoto/todays-imas-idol@0.3.0
       jobs:
         build:
           docker:
@@ -41,6 +43,28 @@ examples:
                   apt-get install -y sudo
             - todays-imas-idol/slack-notification-todays-imas-idol:
                 slack_username: 今日のアイドル
+      workflows:
+        main:
+          jobs:
+          - build
+
+  discord-notification-idols:
+    description: 今日誕生日のアイドルをDiscordに通知します
+    usage:
+      version: 2.1
+      orbs:
+        todays-imas-idol: yutagoto/todays-imas-idol@0.3.0
+      jobs:
+        build:
+          docker:
+          - image: ubuntu:18.04
+          steps:
+            - run:
+                command: |
+                  apt-get update
+                  apt-get install -y sudo
+            - todays-imas-idol/discord-notification-todays-imas-idol:
+                discord_username: 今日のアイドル
       workflows:
         main:
           jobs:
@@ -86,4 +110,29 @@ commands:
               curl -X POST --data-urlencode "payload={\"username\": \"<< parameters.slack_username >>\",\"text\": \"今日誕生日のアイドルは$IDOLSです。\", \"icon_emoji\": \"<< parameters.slack_icon >>\"}" "<< parameters.slack_webhook >>";
             else
               curl -X POST --data-urlencode "payload={\"username\": \"<< parameters.slack_username >>\",\"text\": \"今日誕生日のアイドルはいません。\", \"icon_emoji\": \"<< parameters.slack_icon >>\"}" "<< parameters.slack_webhook >>";
+            fi
+
+  discord-notification-todays-imas-idol:
+    description: 今日が誕生日のアイドルをdiscordへ通知する
+    parameters:
+      discord_webhook:
+        default: ${DISCORD_WEBHOOK}
+        type: string
+      discord_username:
+        default: CiecleCI
+        type: string
+    steps:
+      - checkout
+      - run:
+          command: sudo apt-get update && sudo apt-get install -y curl jq
+      - run:
+          name: 今日のアイドル
+          command: |
+            TODAY=`date +%m-%d`
+            SPURL="https://sparql.crssnky.xyz/spql/imas/query?query=PREFIX%20schema%3A%20%3Chttp%3A%2F%2Fschema.org%2F%3ESELECT%20(sample(%3Fo)%20as%20%3Fdate)%20(sample(%3Fn)%20as%20%3Fname)%20WHERE%20%7B%20%3Fsub%20schema%3AbirthDate%20%3Fo%3B%20schema%3Aname%7Cschema%3AalternateName%20%3Fn%3BFILTER(regex(str(%3Fo)%2C%20%22$TODAY%22%20)).%7Dgroup%20by(%3Fn)order%20by(%3Fname)"
+            IDOLS=`curl -s $SPURL | jq ".results.bindings | map(.name.value)" | jq -r 'join(" ")'`
+            if [ -n "$IDOLS" ]; then
+              curl -H "Content-Type: application/json" -X POST -d "{\"username\": \"<< parameters.discord_username >>\",\"content\": \"今日誕生日のアイドルは$IDOLSです。\"}" "<< parameters.discord_webhook >>";
+            else
+              curl -H "Content-Type: application/json" -X POST -d "{\"username\": \"<< parameters.discord_username >>\",\"content\": \"今日誕生日のアイドルはいません。\"}" "<< parameters.discord_webhook >>";
             fi
