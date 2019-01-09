@@ -1,13 +1,12 @@
 version: 2.1
-orbs:
-  todays-imas-idol: yutagoto/todays-imas-idol@volatile
-
 ubuntu_image: &ubuntu_image
   ubuntu:18.04
-
 install-sudo: &install-sudo |
   apt-get update
   apt-get install -y sudo
+
+orbs:
+  todays-imas-idol: yutagoto/todays-imas-idol@volatile
 
 executors:
   ubuntu-docker:
