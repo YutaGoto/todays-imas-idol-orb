@@ -2,25 +2,31 @@ version: 2.1
 orbs:
   todays-imas-idol: yutagoto/todays-imas-idol@volatile
 
+ubuntu_image: &ubuntu_image
+  ubuntu:18.04
+
+install-sudo: &install-sudo |
+  apt-get update
+  apt-get install -y sudo
+
+executors:
+  ubuntu-docker:
+    docker:
+      - image: *ubuntu_image
+
 jobs:
   build:
-    docker:
-    - image: ubuntu:18.04
+    executor: ubuntu-docker
     steps:
       - run:
-          command: |
-            apt-get update
-            apt-get install -y sudo
+          command: *install-sudo
       - todays-imas-idol/echo-todays-imas-idol
 
   slack:
-    docker:
-    - image: ubuntu:18.04
+    executor: ubuntu-docker
     steps:
       - run:
-          command: |
-            apt-get update
-            apt-get install -y sudo
+          command: *install-sudo
       - todays-imas-idol/slack-notification-todays-imas-idol:
           slack_username: CiecleCI
           slack_icon: ":ciecleci:"
