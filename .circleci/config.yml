@@ -12,6 +12,8 @@ executors:
   ubuntu-docker:
     docker:
       - image: *ubuntu_image
+        environment:
+          TZ: Asia/Tokyo
 
 jobs:
   build:
