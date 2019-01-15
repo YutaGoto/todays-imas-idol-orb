@@ -10,7 +10,7 @@ examples:
     usage:
       version: 2.1
       orbs:
-        todays-imas-idol: yutagoto/todays-imas-idol@0.3.0
+        todays-imas-idol: yutagoto/todays-imas-idol@1.0.0
       jobs:
         build:
           docker:
@@ -31,7 +31,7 @@ examples:
     usage:
       version: 2.1
       orbs:
-        todays-imas-idol: yutagoto/todays-imas-idol@0.3.0
+        todays-imas-idol: yutagoto/todays-imas-idol@1.0.0
       jobs:
         build:
           docker:
@@ -53,7 +53,7 @@ examples:
     usage:
       version: 2.1
       orbs:
-        todays-imas-idol: yutagoto/todays-imas-idol@0.3.0
+        todays-imas-idol: yutagoto/todays-imas-idol@1.0.0
       jobs:
         build:
           docker:
@@ -74,7 +74,7 @@ examples:
     usage:
       version: 2.1
       orbs:
-        todays-imas-idol: yutagoto/todays-imas-idol@0.3.0
+        todays-imas-idol: yutagoto/todays-imas-idol@1.0.0
       jobs:
         build:
           docker:
@@ -85,6 +85,28 @@ examples:
                   apt-get update
                   apt-get install -y sudo
             - todays-imas-idol/chatwork-notification-todays-imas-idol
+
+      workflows:
+        main:
+          jobs:
+          - build
+  line-notification-idols:
+    description: 今日誕生日のアイドルをLINEに通知します
+    usage:
+      version: 2.1
+      orbs:
+        todays-imas-idol: yutagoto/todays-imas-idol@1.0.0
+      jobs:
+        build:
+          docker:
+          - image: ubuntu:18.04
+          steps:
+            - run:
+                command: |
+                  apt-get update
+                  apt-get install -y sudo
+            - todays-imas-idol/line-notification-todays-imas-idol
+
 
       workflows:
         main:
@@ -178,7 +200,31 @@ commands:
             SPURL="https://sparql.crssnky.xyz/spql/imas/query?query=PREFIX%20schema%3A%20%3Chttp%3A%2F%2Fschema.org%2F%3ESELECT%20(sample(%3Fo)%20as%20%3Fdate)%20(sample(%3Fn)%20as%20%3Fname)%20WHERE%20%7B%20%3Fsub%20schema%3AbirthDate%20%3Fo%3B%20schema%3Aname%7Cschema%3AalternateName%20%3Fn%3BFILTER(regex(str(%3Fo)%2C%20%22$TODAY%22%20)).%7Dgroup%20by(%3Fn)order%20by(%3Fname)"
             IDOLS=`curl -s $SPURL | jq ".results.bindings | map(.name.value)" | jq -r 'join(" ")'`
             if [ -n "$IDOLS" ]; then
-              curl -X POST -H "X-ChatWorkToken: << parameters.chatwork_api_token >>" -d "body=今日誕生日のアイドルは$IDOLSです。&self_unread=0" "https://api.chatwork.com/v2/rooms/<< parameters.chatwork_room_id >>/messages"
+              curl -X POST -H "X-ChatWorkToken: << parameters.chatwork_api_token >>" -d "body=今日誕生日のアイドルは$IDOLSです。&self_unread=0" "https://api.chatwork.com/v2/rooms/<< parameters.chatwork_room_id >>/messages";
             else
-              curl -X POST -H "X-ChatWorkToken: << parameters.chatwork_api_token >>" -d "body=今日誕生日のアイドルはいません。&self_unread=0" "https://api.chatwork.com/v2/rooms/<< parameters.chatwork_room_id >>/messages"
+              curl -X POST -H "X-ChatWorkToken: << parameters.chatwork_api_token >>" -d "body=今日誕生日のアイドルはいません。&self_unread=0" "https://api.chatwork.com/v2/rooms/<< parameters.chatwork_room_id >>/messages";
+            fi
+  line-notification-todays-imas-idol:
+    description: 今日が誕生日のアイドルをLINEへ通知する
+    parameters:
+      line_channel_access_token:
+        default: ${LINE_CHANNEL_ACCESS_TOKEN}
+        type: string
+      line_to_id:
+        default: ${LINE_TO_ID}
+        type: string
+    steps:
+      - checkout
+      - run:
+          command: sudo apt-get update && sudo apt-get install -y curl jq
+      - run:
+          name: 今日のアイドル
+          command: |
+            TODAY=`date +%m-%d`
+            SPURL="https://sparql.crssnky.xyz/spql/imas/query?query=PREFIX%20schema%3A%20%3Chttp%3A%2F%2Fschema.org%2F%3ESELECT%20(sample(%3Fo)%20as%20%3Fdate)%20(sample(%3Fn)%20as%20%3Fname)%20WHERE%20%7B%20%3Fsub%20schema%3AbirthDate%20%3Fo%3B%20schema%3Aname%7Cschema%3AalternateName%20%3Fn%3BFILTER(regex(str(%3Fo)%2C%20%22$TODAY%22%20)).%7Dgroup%20by(%3Fn)order%20by(%3Fname)"
+            IDOLS=`curl -s $SPURL | jq ".results.bindings | map(.name.value)" | jq -r 'join(" ")'`
+            if [ -n "$IDOLS" ]; then
+              curl -v -X POST -H 'Content-Type:application/json' -H "Authorization: Bearer << parameters.line_channel_access_token >>" -d "{\"to\": \"<< parameters.line_to_id >>\",\"messages\":[{\"type\":\"text\",\"text\":\"今日誕生日のアイドルは$IDOLSです。\"}]}" "https://api.line.me/v2/bot/message/push";
+            else
+              curl -v -X POST -H 'Content-Type:application/json' -H "Authorization: Bearer << parameters.line_channel_access_token >>" -d "{\"to\": \"<< parameters.line_to_id >>\",\"messages\":[{\"type\":\"text\",\"text\":\"今日誕生日のアイドルはいません。\"}]}" "https://api.line.me/v2/bot/message/push";
             fi
