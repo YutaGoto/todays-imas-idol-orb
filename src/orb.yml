@@ -211,7 +211,7 @@ commands:
         default: ${LINE_CHANNEL_ACCESS_TOKEN}
         type: string
       line_to_id:
-        line_channel_access_token:
+        line_to_id:
         default: ${LINE_TO_ID}
         type: string
     steps:
