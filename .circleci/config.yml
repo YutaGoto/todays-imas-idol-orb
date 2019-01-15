@@ -16,7 +16,7 @@ executors:
           TZ: Asia/Tokyo
 
 jobs:
-  build:
+  echo:
     executor: ubuntu-docker
     steps:
       - run:
@@ -49,10 +49,16 @@ jobs:
 workflows:
   main:
     jobs:
-    - build
+    - echo
     - slack
+      requires:
+        - echo
     - discord
+      requires:
+        - echo
     - chatwork
+      requires:
+        - echo
 
   smoke_test:
     triggers:
@@ -62,7 +68,7 @@ workflows:
             branches:
               only: master
     jobs:
-    - build
+    - echo
 
   smoke_test_slack:
     triggers:
