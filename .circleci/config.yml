@@ -50,15 +50,15 @@ workflows:
   main:
     jobs:
     - echo
-    - slack
-      requires:
-        - echo
-    - discord
-      requires:
-        - echo
-    - chatwork
-      requires:
-        - echo
+    - slack:
+        requires:
+          - echo
+    - discord:
+        requires:
+          - echo
+    - chatwork:
+        requires:
+          - echo
 
   smoke_test:
     triggers:
