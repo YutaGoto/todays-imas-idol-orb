@@ -6,7 +6,7 @@ install-sudo: &install-sudo |
   apt-get install -y sudo
 
 orbs:
-  todays-imas-idol: yutagoto/todays-imas-idol@volatile
+  todays-imas-idol: yutagoto/todays-imas-idol@dev:first
 
 executors:
   ubuntu-docker:
@@ -31,7 +31,6 @@ jobs:
       - todays-imas-idol/slack-notification-todays-imas-idol:
           slack_username: CiecleCI
           slack_icon: ":ciecleci:"
-
   discord:
     executor: ubuntu-docker
     steps:
@@ -45,6 +44,12 @@ jobs:
       - run:
           command: *install-sudo
       - todays-imas-idol/chatwork-notification-todays-imas-idol
+  line:
+    executor: ubuntu-docker
+    steps:
+      - run:
+          command: *install-sudo
+      - todays-imas-idol/line-notification-todays-imas-idol
 
 workflows:
   main:
@@ -57,6 +62,9 @@ workflows:
         requires:
           - echo
     - chatwork:
+        requires:
+          - echo
+    - line:
         requires:
           - echo
 
@@ -99,3 +107,13 @@ workflows:
               only: master
     jobs:
     - chatwork
+
+  smoke_test_line:
+    triggers:
+      - schedule:
+          cron: "0 11 * * *"
+          filters:
+            branches:
+              only: master
+    jobs:
+    - line
