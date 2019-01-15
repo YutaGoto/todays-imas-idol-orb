@@ -226,5 +226,5 @@ commands:
             if [ -n "$IDOLS" ]; then
               curl -v -X POST -H 'Content-Type:application/json' -H 'Authorization: Bearer << parameters.line_channel_access_token >>' -d "{\"to\": \"<< parameters.line_to_id >>\",\"messages\":[{\"type\":\"text\",\"text\":\"今日誕生日のアイドルは$IDOLSです。\"}]}" "https://api.line.me/v2/bot/message/push";
             else
-              curl -v -X POST -H 'Content-Type:application/json' -H 'Authorization: Bearer << parameters.line_channel_access_token >>' -d "{\"to\": \"<< parameters.line_to_id >>\",\"messages\":[{\"type\":\"text\",\"text\":\"今日誕生日のアイドルはいません。\"}]}" "https://api.line.me/v2/bot/message/push"
+              curl -v -X POST -H 'Content-Type:application/json' -H 'Authorization: Bearer << parameters.line_channel_access_token >>' -d "{\"to\": \"<< parameters.line_to_id >>\",\"messages\":[{\"type\":\"text\",\"text\":\"今日誕生日のアイドルはいません。\"}]}" "https://api.line.me/v2/bot/message/push";
             fi
