@@ -6,7 +6,7 @@ install-sudo: &install-sudo |
   apt-get install -y sudo
 
 orbs:
-  todays-imas-idol: yutagoto/todays-imas-idol@volatile
+  todays-imas-idol: yutagoto/todays-imas-idol@dev:first
 
 executors:
   ubuntu-docker:
