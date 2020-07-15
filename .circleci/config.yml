@@ -38,12 +38,6 @@ jobs:
           command: *install-sudo
       - todays-imas-idol/discord-notification-todays-imas-idol:
           discord_username: CiecleCI
-  chatwork:
-    executor: ubuntu-docker
-    steps:
-      - run:
-          command: *install-sudo
-      - todays-imas-idol/chatwork-notification-todays-imas-idol
   line:
     executor: ubuntu-docker
     steps:
@@ -59,9 +53,6 @@ workflows:
         requires:
           - echo
     - discord:
-        requires:
-          - echo
-    - chatwork:
         requires:
           - echo
     - line:
@@ -97,16 +88,6 @@ workflows:
               only: master
     jobs:
     - discord
-
-  smoke_test_chatwork:
-    triggers:
-      - schedule:
-          cron: "0 6 * * 0"
-          filters:
-            branches:
-              only: master
-    jobs:
-    - chatwork
 
   smoke_test_line:
     triggers:
